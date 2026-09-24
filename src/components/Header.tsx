@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, RefreshCw, Moon, Sun, Smartphone, BellRing, ChevronDown, QrCode } from 'lucide-react';
+import { MapPin, RefreshCw, Moon, Sun, Smartphone, QrCode } from 'lucide-react';
 import { CityData } from '../types/prayer';
 
 interface HeaderProps {
@@ -10,7 +10,6 @@ interface HeaderProps {
   isDark: boolean;
   onToggleTheme: () => void;
   onOpenWidgetModal: () => void;
-  onOpenNotificationShade: () => void;
   onOpenApkModal: () => void;
 }
 
@@ -22,26 +21,10 @@ export const Header: React.FC<HeaderProps> = ({
   isDark,
   onToggleTheme,
   onOpenWidgetModal,
-  onOpenNotificationShade,
   onOpenApkModal
 }) => {
   return (
     <div className="w-full relative">
-      {/* Subtle Android top pull indicator bar - clicking or dragging simulates swiping down Android status bar */}
-      <button
-        onClick={onOpenNotificationShade}
-        className="w-full pt-1.5 pb-1 flex flex-col items-center justify-center group cursor-pointer select-none transition-colors"
-        title="Üst menüden kaydırınca çıkan sabit bildirimi aç"
-      >
-        <div className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-neutral-800/40 hover:bg-neutral-800/70 border border-neutral-700/30 transition-all">
-          <BellRing className="w-3 h-3 text-amber-500 animate-pulse" />
-          <span className="text-[10px] font-medium text-neutral-400 group-hover:text-amber-400">
-            Üst Bildirim Menüsü (Sabit Çubuk)
-          </span>
-          <ChevronDown className="w-3 h-3 text-neutral-500 group-hover:text-amber-400 transition-transform group-hover:translate-y-0.5" />
-        </div>
-      </button>
-
       <header className="w-full pt-2 pb-2 px-5 flex items-start justify-between z-20">
         {/* City & Diyanet Takvimi info - mirrors user screenshot */}
         <div className="flex flex-col">
@@ -91,20 +74,6 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <QrCode className="w-4 h-4" />
             <span className="text-[11px] font-bold hidden xs:inline">APK</span>
-          </button>
-
-          {/* Ongoing Notification Shade Trigger Button */}
-          <button
-            onClick={onOpenNotificationShade}
-            className={`p-2 sm:p-2.5 rounded-xl transition-all cursor-pointer border ${
-              isDark 
-                ? 'bg-neutral-900/70 border-neutral-800 text-amber-400 hover:bg-neutral-800 hover:border-amber-500/40' 
-                : 'bg-neutral-100 border-neutral-200 text-amber-600 hover:bg-neutral-200'
-            }`}
-            title="Üst Menü Sabit Bildirimi"
-            aria-label="Üst Menü Sabit Bildirimi"
-          >
-            <BellRing className="w-4 h-4" />
           </button>
 
           {/* Widget helper button */}

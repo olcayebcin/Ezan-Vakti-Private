@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { DEFAULT_CITY, calculatePrayerTimes, getHijriDate, getNextPrayerInfo, formatTurkishDate, TURKEY_CITIES } from './utils/prayerTimes';
 import { CityData, PrayerName } from './types/prayer';
 import { DAILY_VERSES, DAILY_HADITHS, WISDOM_QUOTES, DAILY_DUAS } from './data/islamicContent';
@@ -11,14 +11,17 @@ import { CityPickerModal } from './components/CityPickerModal';
 import { CompassModal } from './components/CompassModal';
 import { ImsakiyeModal } from './components/ImsakiyeModal';
 import { MosqueFinderModal } from './components/MosqueFinderModal';
-import { QuranHatimModal } from './components/QuranHatimModal';
+import { QuranModal } from './components/QuranModal';
 import { EzanSettingsModal } from './components/EzanSettingsModal';
 import { WidgetModal } from './components/WidgetModal';
 import { DiniBilgilerModal } from './components/DiniBilgilerModal';
 import { ShareCardModal } from './components/ShareCardModal';
-import { AndroidNotificationShade } from './components/AndroidNotificationShade';
 import { ApkInstallModal } from './components/ApkInstallModal';
 import { updateOngoingNotification, clearOngoingNotification } from './utils/ongoingNotification';
+import { updatePrayerWidget } from './utils/prayerWidget';
+import { loadNotificationSettings, saveNotificationSettings, schedulePrayerNotifications, NotificationSettings } from './utils/prayerNotifications';
+import { usePrayerAlerts } from './hooks/usePrayerAlerts';
+import { AdhanReaderId, loadAdhanReader, saveAdhanReader } from './utils/adhan';
 import { MapPin, BookOpen, BellRing, AlertCircle } from 'lucide-react';
 
 export default function App() {
@@ -52,7 +55,14 @@ export default function App() {
     const saved = localStorage.getItem('namaz_ongoing_shade');
     return saved !== 'false'; // default enabled
   });
-  const [showNotificationShade, setShowNotificationShade] = useState(false);
+
+  // Per-prayer notification settings (edited in Ayarlar)
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>(loadNotificationSettings);
+  const [settingsFocusPrayer, setSettingsFocusPrayer] = useState<PrayerName | null>(null);
+  const [adhanReader, setAdhanReader] = useState<AdhanReaderId>(loadAdhanReader);
+  // Bumped when the app returns to the foreground so alerts get re-planned
+  // (e.g. after the user grants the exact-alarm permission in system settings).
+  const [resumeCount, setResumeCount] = useState(0);
 
   // Modals state
   const [showCityPicker, setShowCityPicker] = useState(false);
@@ -66,6 +76,9 @@ export default function App() {
   const [showShareCard, setShowShareCard] = useState(false);
   const [shareCardType, setShareCardType] = useState<'verse' | 'hadith' | 'quote' | 'dua'>('verse');
   const [showApkModal, setShowApkModal] = useState(false);
+  // Keep the Quran screen open across app switches while a recitation is playing.
+  const quranAudioActiveRef = useRef(false);
+  const handleQuranAudioActive = useCallback((active: boolean) => { quranAudioActiveRef.current = active; }, []);
 
   // Daily content index based on day of month
   const dayIndex = now.getDate() % DAILY_VERSES.length;
@@ -98,6 +111,15 @@ export default function App() {
     }
   }, [isOngoingEnabled]);
 
+  // Persist notification settings
+  useEffect(() => {
+    saveNotificationSettings(notificationSettings);
+  }, [notificationSettings]);
+
+  useEffect(() => {
+    saveAdhanReader(adhanReader);
+  }, [adhanReader]);
+
   // Online / Offline listener
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -107,6 +129,31 @@ export default function App() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Always reopen from home when the app becomes visible again after backgrounding.
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        setResumeCount(c => c + 1);
+        setActiveTab('home');
+        setShowCityPicker(false);
+        setShowCompass(false);
+        setShowImsakiye(false);
+        setShowMosques(false);
+        if (!quranAudioActiveRef.current) setShowQuran(false);
+        setShowEzanSettings(false);
+        setShowWidget(false);
+        setShowDiniBilgiler(false);
+        setShowShareCard(false);
+        setShowApkModal(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -121,7 +168,7 @@ export default function App() {
   // Calculate prayer times
   const prayerTimes = useMemo(() => {
     return calculatePrayerTimes(currentCity.lat, currentCity.lng, now, currentCity.timezone);
-  }, [currentCity, now]);
+  }, [currentCity, now.getFullYear(), now.getMonth(), now.getDate()]);
 
   // Hijri date
   const hijriDate = useMemo(() => {
@@ -138,17 +185,36 @@ export default function App() {
     return getNextPrayerInfo(prayerTimes, now);
   }, [prayerTimes, now]);
 
-  // Sync real Android persistent notification when times or next prayer update
+  // Keep the system notification stable; the live countdown belongs to the widget.
   useEffect(() => {
-    if (isOngoingEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    if (isOngoingEnabled) {
       updateOngoingNotification(currentCity, prayerTimes, nextInfo, true);
     }
-  }, [currentCity, prayerTimes, nextInfo.nextPrayer, nextInfo.remainingFormatted.slice(0, 5), isOngoingEnabled]);
+  }, [currentCity, prayerTimes, nextInfo.nextPrayer, isOngoingEnabled]);
+
+  // Update the home-screen widget only when its actual displayed data changes.
+  useEffect(() => {
+    updatePrayerWidget(currentCity, prayerTimes, nextInfo).catch(err => {
+      console.debug('Prayer widget update error:', err);
+    });
+  }, [currentCity, prayerTimes, nextInfo.nextPrayer]);
+
+  // Re-plan OS prayer alerts (Android) when location, settings or the day changes.
+  const todayKey = now.toDateString();
+  useEffect(() => {
+    schedulePrayerNotifications(currentCity, notificationSettings, adhanReader).catch(err => {
+      console.debug('Prayer notification scheduling error:', err);
+    });
+  }, [currentCity, notificationSettings, adhanReader, todayKey, resumeCount]);
+
+  // In-app alerts (makam playback, web notifications) while the app is open.
+  usePrayerAlerts(now, currentCity, notificationSettings, adhanReader);
 
   // Handle Bottom Navigation clicks
   const handleSelectTab = useCallback((tab: ActiveTab) => {
     setActiveTab(tab);
     if (tab === 'settings') {
+      setSettingsFocusPrayer(null);
       setShowEzanSettings(true);
     } else if (tab === 'compass') {
       setShowCompass(true);
@@ -224,23 +290,9 @@ export default function App() {
   };
 
   const handleSelectPrayerFromTimeline = (prayer: PrayerName) => {
+    setSettingsFocusPrayer(prayer);
+    setActiveTab('settings');
     setShowEzanSettings(true);
-  };
-
-  // Trigger real persistent notification to Android notification tray
-  const handleTriggerRealNotification = async () => {
-    if (typeof Notification !== 'undefined') {
-      let perm = Notification.permission;
-      if (perm !== 'granted') {
-        perm = await Notification.requestPermission();
-      }
-      if (perm === 'granted') {
-        updateOngoingNotification(currentCity, prayerTimes, nextInfo, true);
-        alert('Sabit üst bildirim telefonunuzun bildirim çubuğuna eklendi.');
-      } else {
-        alert('Bildirim izni verilmedi. Lütfen tarayıcınızdan veya telefon ayarlarından bildirimlere izin verin.');
-      }
-    }
   };
 
   return (
@@ -272,7 +324,6 @@ export default function App() {
           isDark={isDark}
           onToggleTheme={() => setIsDark(!isDark)}
           onOpenWidgetModal={() => setShowWidget(true)}
-          onOpenNotificationShade={() => setShowNotificationShade(true)}
           onOpenApkModal={() => setShowApkModal(true)}
         />
 
@@ -334,8 +385,8 @@ export default function App() {
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs group-hover:text-emerald-400 transition-colors">Hatim Takibi</h4>
-                  <p className="text-[10px] text-neutral-400">30 Cüz & Kuran Oku</p>
+                  <h4 className="font-bold text-xs group-hover:text-emerald-400 transition-colors">Kur’an-ı Kerîm</h4>
+                  <p className="text-[10px] text-neutral-400">Arapça, Meal & Dinle</p>
                 </div>
               </button>
             </div>
@@ -347,18 +398,6 @@ export default function App() {
           activeTab={activeTab}
           onSelectTab={handleSelectTab}
           isDark={isDark}
-        />
-
-        {/* ANDROID PULL-DOWN NOTIFICATION SHADE (Sabit Üst Menü Bildirimi) */}
-        <AndroidNotificationShade
-          isOpen={showNotificationShade}
-          onClose={() => setShowNotificationShade(false)}
-          city={currentCity}
-          times={prayerTimes}
-          nextInfo={nextInfo}
-          isOngoingEnabled={isOngoingEnabled}
-          onToggleOngoing={(enabled) => setIsOngoingEnabled(enabled)}
-          onTriggerRealNotification={handleTriggerRealNotification}
         />
 
         {/* MODALS */}
@@ -402,13 +441,14 @@ export default function App() {
           isDark={isDark}
         />
 
-        <QuranHatimModal
+        <QuranModal
           isOpen={showQuran}
           onClose={() => {
             setShowQuran(false);
             setActiveTab('home');
           }}
           isDark={isDark}
+          onAudioActiveChange={handleQuranAudioActive}
         />
 
         <EzanSettingsModal
@@ -418,6 +458,20 @@ export default function App() {
             setActiveTab('home');
           }}
           isDark={isDark}
+          onToggleTheme={() => setIsDark(!isDark)}
+          city={currentCity}
+          onOpenCityPicker={() => {
+            setShowEzanSettings(false);
+            setActiveTab('home');
+            setShowCityPicker(true);
+          }}
+          isOngoingEnabled={isOngoingEnabled}
+          onToggleOngoing={setIsOngoingEnabled}
+          settings={notificationSettings}
+          onChangeSettings={setNotificationSettings}
+          adhanReader={adhanReader}
+          onChangeAdhanReader={setAdhanReader}
+          focusPrayer={settingsFocusPrayer}
         />
 
         <WidgetModal

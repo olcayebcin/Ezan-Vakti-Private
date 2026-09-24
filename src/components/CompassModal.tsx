@@ -26,6 +26,12 @@ export const CompassModal: React.FC<CompassModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
+    // Keep the compass screen upright on browsers that support Screen Orientation API.
+    const orientation = window.screen.orientation;
+    if (orientation && typeof orientation.lock === 'function') {
+      orientation.lock('portrait').catch(() => undefined);
+    }
+
     const handleOrientation = (e: DeviceOrientationEvent) => {
       // iOS webkitCompassHeading vs Android standard alpha
       let heading = 0;

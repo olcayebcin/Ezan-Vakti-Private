@@ -74,8 +74,8 @@ export const ApkInstallModal: React.FC<ApkInstallModalProps> = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Namaz Vakti & Ezan Pro',
-          text: 'Namaz vakitleri, ezan makamları, kıble pusulası ve hatim takibi uygulaması:',
+          title: 'Namaz Vakti',
+          text: 'Namaz vakitleri, ezan makamları, kıble pusulası ve sesli Kur’an-ı Kerim uygulaması:',
           url: activeUrl,
         });
       } catch (err) {

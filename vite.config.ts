@@ -11,15 +11,53 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon.png'],
+        includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png', 'pwa-maskable-512x512.png'],
+        injectRegister: 'auto',
+        strategies: 'generateSW',
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,svg,png,ico,json}'],
+          navigateFallback: '/index.html',
+          navigateFallbackDenylist: [/^\/api\//],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\//i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+            {
+              urlPattern: /^https:\/\/fonts\.gstatic\.com\//i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+          ],
+        },
         manifest: {
           id: '/',
-          name: 'Namaz Vakti & Ezan Pro',
+          name: 'Namaz Vakti',
           short_name: 'Namaz Vakti',
-          description: 'Diyanet takvimli namaz vakitleri, ezan makamları, kıble pusulası, cami bulucu, Kuran-ı Kerim ve hatim takibi.',
-          theme_color: '#0d1117',
-          background_color: '#090d12',
+          description: 'Diyanet takvimli namaz vakitleri, ezan makamları, kıble pusulası, cami bulucu, sesli Kur’an-ı Kerim ve Türkçe meal.',
+          theme_color: '#1ca25f',
+          background_color: '#1ca25f',
           display: 'standalone',
+          display_override: ['window-controls-overlay', 'standalone'],
           start_url: '/',
           scope: '/',
           icons: [

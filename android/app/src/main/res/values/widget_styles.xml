@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PrayerWidgetCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+    <style name="PrayerWidgetLabel" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">#D7D8DC</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="PrayerWidgetTime" parent="@android:style/TextAppearance.Material.Body2">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="PrayerWidgetDot" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">#F97316</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">-6dp</item>
+    </style>
+    <style name="PrayerWidgetCity" parent="@android:style/TextAppearance.Material.Body2">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="PrayerWidgetRemaining" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">#B7B9C0</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textAlignment">viewEnd</item>
+    </style>
+</resources>

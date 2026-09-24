@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:background="@drawable/widget_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/widget_city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Namaz Vakti"
+            style="@style/PrayerWidgetCity" />
+        <TextView
+            android:id="@+id/widget_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sonraki vakit"
+            style="@style/PrayerWidgetRemaining" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView android:id="@+id/widget_imsak_label" style="@style/PrayerWidgetLabel" android:text="İmsak" />
+        <TextView android:id="@+id/widget_gunes_label" style="@style/PrayerWidgetLabel" android:text="Güneş" />
+        <TextView android:id="@+id/widget_ogle_label" style="@style/PrayerWidgetLabel" android:text="Öğle" />
+        <TextView android:id="@+id/widget_ikindi_label" style="@style/PrayerWidgetLabel" android:text="İkindi" />
+        <TextView android:id="@+id/widget_aksam_label" style="@style/PrayerWidgetLabel" android:text="Akşam" />
+        <TextView android:id="@+id/widget_yatsi_label" style="@style/PrayerWidgetLabel" android:text="Yatsı" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView android:id="@+id/widget_imsak_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+        <TextView android:id="@+id/widget_gunes_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+        <TextView android:id="@+id/widget_ogle_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+        <TextView android:id="@+id/widget_ikindi_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+        <TextView android:id="@+id/widget_aksam_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+        <TextView android:id="@+id/widget_yatsi_time" style="@style/PrayerWidgetTime" android:text="--:--" />
+    </LinearLayout>
+</LinearLayout>

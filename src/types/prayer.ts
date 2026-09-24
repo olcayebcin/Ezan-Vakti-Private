@@ -28,7 +28,7 @@ export interface HijriDate {
   formatted: string;
 }
 
-export type AdhanMakam = 'saba' | 'rast' | 'hicaz' | 'segah' | 'ussak' | 'mekke' | 'bip';
+export type AdhanMakam = 'saba' | 'rast' | 'hicaz' | 'segah' | 'ussak' | 'mekke';
 
 export interface AdhanMakamInfo {
   id: AdhanMakam;
@@ -41,9 +41,9 @@ export interface AdhanMakamInfo {
 export interface PrayerNotificationConfig {
   prayer: PrayerName;
   enabled: boolean;
-  minutesBefore: number; // 0 for exact time, 15, 30, 45
+  minutesBefore: number; // extra reminder this many minutes before; 0 = none
   makam: AdhanMakam;
-  soundEnabled: boolean;
+  soundEnabled: boolean; // play the adhan when the time comes
   vibrateEnabled: boolean;
 }
 
@@ -60,20 +60,10 @@ export interface Mosque {
   historical?: boolean;
 }
 
-export interface JuzProgress {
-  juzNumber: number;
-  isCompleted: boolean;
-  readPages: number; // 1 to 20
-  readerName?: string;
-  completedAt?: string;
-}
-
 export interface Surah {
   id: number;
   name: string;
   arabicName: string;
-  transliteration: string;
-  translation: string;
   ayahCount: number;
   revelationType: 'Mekke' | 'Medine';
 }

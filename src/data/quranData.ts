@@ -1,281 +1,119 @@
-import { JuzProgress, Surah } from '../types/prayer';
+import { Surah } from '../types/prayer';
 
+// All 114 surahs. Arabic names, ayah counts and revelation places from api.alquran.cloud.
 export const SURAH_LIST: Surah[] = [
-  { id: 1, name: 'Fâtiha', arabicName: 'الفاتحة', transliteration: 'Al-Fatiha', translation: 'Açılış, Başlangıç', ayahCount: 7, revelationType: 'Mekke' },
-  { id: 2, name: 'Bakara', arabicName: 'البقرة', transliteration: 'Al-Baqarah', translation: 'Boğa, İnek', ayahCount: 286, revelationType: 'Medine' },
-  { id: 3, name: 'Âl-i İmrân', arabicName: 'آل عمران', transliteration: 'Ali Imran', translation: 'İmran Ailesi', ayahCount: 200, revelationType: 'Medine' },
-  { id: 4, name: 'Nisâ', arabicName: 'النساء', transliteration: 'An-Nisa', translation: 'Kadınlar', ayahCount: 176, revelationType: 'Medine' },
-  { id: 5, name: 'Mâide', arabicName: 'المائدة', transliteration: 'Al-Maidah', translation: 'Sofra', ayahCount: 120, revelationType: 'Medine' },
-  { id: 6, name: 'En’âm', arabicName: 'الأنعام', transliteration: 'Al-Anam', translation: 'Koyun, Keçi ve Sığır', ayahCount: 165, revelationType: 'Mekke' },
-  { id: 7, name: 'A’râf', arabicName: 'الأعراف', transliteration: 'Al-Araf', translation: 'Yüksek Tepeler', ayahCount: 206, revelationType: 'Mekke' },
-  { id: 8, name: 'Enfâl', arabicName: 'الأنفال', transliteration: 'Al-Anfal', translation: 'Savaş Ganimetleri', ayahCount: 75, revelationType: 'Medine' },
-  { id: 9, name: 'Tevbe', arabicName: 'التوبة', transliteration: 'At-Tawbah', translation: 'Tövbe ve Bağışlanma', ayahCount: 129, revelationType: 'Medine' },
-  { id: 10, name: 'Yûnus', arabicName: 'يونس', transliteration: 'Yunus', translation: 'Yunus Peygamber', ayahCount: 109, revelationType: 'Mekke' },
-  { id: 11, name: 'Hûd', arabicName: 'هود', transliteration: 'Hud', translation: 'Hud Peygamber', ayahCount: 123, revelationType: 'Mekke' },
-  { id: 12, name: 'Yûsuf', arabicName: 'يوسف', transliteration: 'Yusuf', translation: 'Yusuf Peygamber', ayahCount: 111, revelationType: 'Mekke' },
-  { id: 13, name: 'Ra’d', arabicName: 'الرعد', transliteration: 'Ar-Rad', translation: 'Gök Gürültüsü', ayahCount: 43, revelationType: 'Medine' },
-  { id: 14, name: 'İbrâhîm', arabicName: 'إبراهيم', transliteration: 'Ibrahim', translation: 'İbrahim Peygamber', ayahCount: 52, revelationType: 'Mekke' },
-  { id: 15, name: 'Hicr', arabicName: 'الحجر', transliteration: 'Al-Hijr', translation: 'Taşlık Vadi', ayahCount: 99, revelationType: 'Mekke' },
-  { id: 16, name: 'Nahl', arabicName: 'النحل', transliteration: 'An-Nahl', translation: 'Bal Arısı', ayahCount: 128, revelationType: 'Mekke' },
-  { id: 17, name: 'İsrâ', arabicName: 'الإسراء', transliteration: 'Al-Isra', translation: 'Gece Yürüyüşü', ayahCount: 111, revelationType: 'Mekke' },
-  { id: 18, name: 'Kehf', arabicName: 'الكهف', transliteration: 'Al-Kahf', translation: 'Mağara Ehli', ayahCount: 110, revelationType: 'Mekke' },
-  { id: 19, name: 'Meryem', arabicName: 'مريم', transliteration: 'Maryam', translation: 'Hz. Meryem', ayahCount: 98, revelationType: 'Mekke' },
-  { id: 20, name: 'Tâhâ', arabicName: 'طه', transliteration: 'Ta-Ha', translation: 'Tâhâ', ayahCount: 135, revelationType: 'Mekke' },
-  { id: 36, name: 'Yâsîn', arabicName: 'يس', transliteration: 'Ya-Sin', translation: 'Kur’an’ın Kalbi', ayahCount: 83, revelationType: 'Mekke' },
-  { id: 55, name: 'Rahmân', arabicName: 'الرحمن', transliteration: 'Ar-Rahman', translation: 'Sonsuz Merhamet Sahibi', ayahCount: 78, revelationType: 'Medine' },
-  { id: 56, name: 'Vâkıa', arabicName: 'الواقعة', transliteration: 'Al-Waqiah', translation: 'Kıyamet Olayı', ayahCount: 96, revelationType: 'Mekke' },
-  { id: 67, name: 'Mülk (Tebâreke)', arabicName: 'الملك', transliteration: 'Al-Mulk', translation: 'Mutlak Hükümranlık', ayahCount: 30, revelationType: 'Mekke' },
-  { id: 78, name: 'Nebe (Amme)', arabicName: 'النبأ', transliteration: 'An-Naba', translation: 'Büyük Haber', ayahCount: 40, revelationType: 'Mekke' },
-  { id: 93, name: 'Duhâ', arabicName: 'الضحى', transliteration: 'Ad-Duha', translation: 'Kuşluk Vakti', ayahCount: 11, revelationType: 'Mekke' },
-  { id: 94, name: 'İnşirâh', arabicName: 'الشرح', transliteration: 'Ash-Sharh', translation: 'Gönül Ferahlığı', ayahCount: 8, revelationType: 'Mekke' },
-  { id: 97, name: 'Kadir', arabicName: 'القدر', transliteration: 'Al-Qadr', translation: 'Kadir Gecesi', ayahCount: 5, revelationType: 'Mekke' },
-  { id: 103, name: 'Asr', arabicName: 'العصر', transliteration: 'Al-Asr', translation: 'Zaman ve İkindi', ayahCount: 3, revelationType: 'Mekke' },
-  { id: 108, name: 'Kevser', arabicName: 'الكوثر', transliteration: 'Al-Kawthar', translation: 'Bitmez Tükenmez Nimet', ayahCount: 3, revelationType: 'Mekke' },
-  { id: 109, name: 'Kâfirûn', arabicName: 'الكافرون', transliteration: 'Al-Kafirun', translation: 'İnkârcılar', ayahCount: 6, revelationType: 'Mekke' },
-  { id: 110, name: 'Nasr', arabicName: 'النصر', transliteration: 'An-Nasr', translation: 'Zafer ve Yardım', ayahCount: 3, revelationType: 'Medine' },
-  { id: 112, name: 'İhlâs', arabicName: 'الإخلاص', transliteration: 'Al-Ikhlas', translation: 'Samimiyet ve Tevhid', ayahCount: 4, revelationType: 'Mekke' },
-  { id: 113, name: 'Felak', arabicName: 'الفلق', transliteration: 'Al-Falaq', translation: 'Sabahın Aydınlığı', ayahCount: 5, revelationType: 'Mekke' },
-  { id: 114, name: 'Nâs', arabicName: 'الناس', transliteration: 'An-Nas', translation: 'İnsanlar', ayahCount: 6, revelationType: 'Mekke' }
+  { id: 1, name: "Fâtiha", arabicName: "ٱلْفَاتِحَةِ", ayahCount: 7, revelationType: 'Mekke' },
+  { id: 2, name: "Bakara", arabicName: "البَقَرَةِ", ayahCount: 286, revelationType: 'Medine' },
+  { id: 3, name: "Âl-i İmrân", arabicName: "آلِ عِمۡرَانَ", ayahCount: 200, revelationType: 'Medine' },
+  { id: 4, name: "Nisâ", arabicName: "النِّسَاءِ", ayahCount: 176, revelationType: 'Medine' },
+  { id: 5, name: "Mâide", arabicName: "المَائـِدَةِ", ayahCount: 120, revelationType: 'Medine' },
+  { id: 6, name: "En'âm", arabicName: "الأَنۡعَامِ", ayahCount: 165, revelationType: 'Mekke' },
+  { id: 7, name: "A'râf", arabicName: "الأَعۡرَافِ", ayahCount: 206, revelationType: 'Mekke' },
+  { id: 8, name: "Enfâl", arabicName: "الأَنفَالِ", ayahCount: 75, revelationType: 'Medine' },
+  { id: 9, name: "Tevbe", arabicName: "التَّوۡبَةِ", ayahCount: 129, revelationType: 'Medine' },
+  { id: 10, name: "Yûnus", arabicName: "يُونُسَ", ayahCount: 109, revelationType: 'Mekke' },
+  { id: 11, name: "Hûd", arabicName: "هُودٍ", ayahCount: 123, revelationType: 'Mekke' },
+  { id: 12, name: "Yûsuf", arabicName: "يُوسُفَ", ayahCount: 111, revelationType: 'Mekke' },
+  { id: 13, name: "Ra'd", arabicName: "الرَّعۡدِ", ayahCount: 43, revelationType: 'Medine' },
+  { id: 14, name: "İbrâhîm", arabicName: "إِبۡرَاهِيمَ", ayahCount: 52, revelationType: 'Mekke' },
+  { id: 15, name: "Hicr", arabicName: "الحِجۡرِ", ayahCount: 99, revelationType: 'Mekke' },
+  { id: 16, name: "Nahl", arabicName: "النَّحۡلِ", ayahCount: 128, revelationType: 'Mekke' },
+  { id: 17, name: "İsrâ", arabicName: "الإِسۡرَاءِ", ayahCount: 111, revelationType: 'Mekke' },
+  { id: 18, name: "Kehf", arabicName: "الكَهۡفِ", ayahCount: 110, revelationType: 'Mekke' },
+  { id: 19, name: "Meryem", arabicName: "مَرۡيَمَ", ayahCount: 98, revelationType: 'Mekke' },
+  { id: 20, name: "Tâhâ", arabicName: "طه", ayahCount: 135, revelationType: 'Mekke' },
+  { id: 21, name: "Enbiyâ", arabicName: "الأَنبِيَاءِ", ayahCount: 112, revelationType: 'Mekke' },
+  { id: 22, name: "Hac", arabicName: "الحَجِّ", ayahCount: 78, revelationType: 'Medine' },
+  { id: 23, name: "Mü'minûn", arabicName: "المُؤۡمِنُونَ", ayahCount: 118, revelationType: 'Mekke' },
+  { id: 24, name: "Nûr", arabicName: "النُّورِ", ayahCount: 64, revelationType: 'Medine' },
+  { id: 25, name: "Furkân", arabicName: "الفُرۡقَانِ", ayahCount: 77, revelationType: 'Mekke' },
+  { id: 26, name: "Şuarâ", arabicName: "الشُّعَرَاءِ", ayahCount: 227, revelationType: 'Mekke' },
+  { id: 27, name: "Neml", arabicName: "النَّمۡلِ", ayahCount: 93, revelationType: 'Mekke' },
+  { id: 28, name: "Kasas", arabicName: "القَصَصِ", ayahCount: 88, revelationType: 'Mekke' },
+  { id: 29, name: "Ankebût", arabicName: "العَنكَبُوتِ", ayahCount: 69, revelationType: 'Mekke' },
+  { id: 30, name: "Rûm", arabicName: "الرُّومِ", ayahCount: 60, revelationType: 'Mekke' },
+  { id: 31, name: "Lokmân", arabicName: "لُقۡمَانَ", ayahCount: 34, revelationType: 'Mekke' },
+  { id: 32, name: "Secde", arabicName: "السَّجۡدَةِ", ayahCount: 30, revelationType: 'Mekke' },
+  { id: 33, name: "Ahzâb", arabicName: "الأَحۡزَابِ", ayahCount: 73, revelationType: 'Medine' },
+  { id: 34, name: "Sebe'", arabicName: "سَبَإٍ", ayahCount: 54, revelationType: 'Mekke' },
+  { id: 35, name: "Fâtır", arabicName: "فَاطِرٍ", ayahCount: 45, revelationType: 'Mekke' },
+  { id: 36, name: "Yâsîn", arabicName: "يسٓ", ayahCount: 83, revelationType: 'Mekke' },
+  { id: 37, name: "Sâffât", arabicName: "الصَّافَّاتِ", ayahCount: 182, revelationType: 'Mekke' },
+  { id: 38, name: "Sâd", arabicName: "صٓ", ayahCount: 88, revelationType: 'Mekke' },
+  { id: 39, name: "Zümer", arabicName: "الزُّمَرِ", ayahCount: 75, revelationType: 'Mekke' },
+  { id: 40, name: "Mü'min", arabicName: "غَافِرٍ", ayahCount: 85, revelationType: 'Mekke' },
+  { id: 41, name: "Fussilet", arabicName: "فُصِّلَتۡ", ayahCount: 54, revelationType: 'Mekke' },
+  { id: 42, name: "Şûrâ", arabicName: "الشُّورَىٰ", ayahCount: 53, revelationType: 'Mekke' },
+  { id: 43, name: "Zuhruf", arabicName: "الزُّخۡرُفِ", ayahCount: 89, revelationType: 'Mekke' },
+  { id: 44, name: "Duhân", arabicName: "الدُّخَانِ", ayahCount: 59, revelationType: 'Mekke' },
+  { id: 45, name: "Câsiye", arabicName: "الجَاثِيَةِ", ayahCount: 37, revelationType: 'Mekke' },
+  { id: 46, name: "Ahkâf", arabicName: "الأَحۡقَافِ", ayahCount: 35, revelationType: 'Mekke' },
+  { id: 47, name: "Muhammed", arabicName: "مُحَمَّدٍ", ayahCount: 38, revelationType: 'Medine' },
+  { id: 48, name: "Fetih", arabicName: "الفَتۡحِ", ayahCount: 29, revelationType: 'Medine' },
+  { id: 49, name: "Hucurât", arabicName: "الحُجُرَاتِ", ayahCount: 18, revelationType: 'Medine' },
+  { id: 50, name: "Kâf", arabicName: "قٓ", ayahCount: 45, revelationType: 'Mekke' },
+  { id: 51, name: "Zâriyât", arabicName: "الذَّارِيَاتِ", ayahCount: 60, revelationType: 'Mekke' },
+  { id: 52, name: "Tûr", arabicName: "الطُّورِ", ayahCount: 49, revelationType: 'Mekke' },
+  { id: 53, name: "Necm", arabicName: "النَّجۡمِ", ayahCount: 62, revelationType: 'Mekke' },
+  { id: 54, name: "Kamer", arabicName: "القَمَرِ", ayahCount: 55, revelationType: 'Mekke' },
+  { id: 55, name: "Rahmân", arabicName: "الرَّحۡمَٰن", ayahCount: 78, revelationType: 'Medine' },
+  { id: 56, name: "Vâkıa", arabicName: "الوَاقِعَةِ", ayahCount: 96, revelationType: 'Mekke' },
+  { id: 57, name: "Hadîd", arabicName: "الحَدِيدِ", ayahCount: 29, revelationType: 'Medine' },
+  { id: 58, name: "Mücâdele", arabicName: "المُجَادلَةِ", ayahCount: 22, revelationType: 'Medine' },
+  { id: 59, name: "Haşr", arabicName: "الحَشۡرِ", ayahCount: 24, revelationType: 'Medine' },
+  { id: 60, name: "Mümtehine", arabicName: "المُمۡتَحنَةِ", ayahCount: 13, revelationType: 'Medine' },
+  { id: 61, name: "Saf", arabicName: "الصَّفِّ", ayahCount: 14, revelationType: 'Medine' },
+  { id: 62, name: "Cuma", arabicName: "الجُمُعَةِ", ayahCount: 11, revelationType: 'Medine' },
+  { id: 63, name: "Münâfikûn", arabicName: "المُنَافِقُونَ", ayahCount: 11, revelationType: 'Medine' },
+  { id: 64, name: "Teğâbün", arabicName: "التَّغَابُنِ", ayahCount: 18, revelationType: 'Medine' },
+  { id: 65, name: "Talâk", arabicName: "الطَّلَاقِ", ayahCount: 12, revelationType: 'Medine' },
+  { id: 66, name: "Tahrîm", arabicName: "التَّحۡرِيمِ", ayahCount: 12, revelationType: 'Medine' },
+  { id: 67, name: "Mülk", arabicName: "المُلۡكِ", ayahCount: 30, revelationType: 'Mekke' },
+  { id: 68, name: "Kalem", arabicName: "القَلَمِ", ayahCount: 52, revelationType: 'Mekke' },
+  { id: 69, name: "Hâkka", arabicName: "الحَاقَّةِ", ayahCount: 52, revelationType: 'Mekke' },
+  { id: 70, name: "Meâric", arabicName: "المَعَارِجِ", ayahCount: 44, revelationType: 'Mekke' },
+  { id: 71, name: "Nûh", arabicName: "نُوحٍ", ayahCount: 28, revelationType: 'Mekke' },
+  { id: 72, name: "Cin", arabicName: "الجِنِّ", ayahCount: 28, revelationType: 'Mekke' },
+  { id: 73, name: "Müzzemmil", arabicName: "المُزَّمِّلِ", ayahCount: 20, revelationType: 'Mekke' },
+  { id: 74, name: "Müddessir", arabicName: "المُدَّثِّرِ", ayahCount: 56, revelationType: 'Mekke' },
+  { id: 75, name: "Kıyâme", arabicName: "القِيَامَةِ", ayahCount: 40, revelationType: 'Mekke' },
+  { id: 76, name: "İnsân", arabicName: "الإِنسَانِ", ayahCount: 31, revelationType: 'Medine' },
+  { id: 77, name: "Mürselât", arabicName: "المُرۡسَلَاتِ", ayahCount: 50, revelationType: 'Mekke' },
+  { id: 78, name: "Nebe'", arabicName: "النَّبَإِ", ayahCount: 40, revelationType: 'Mekke' },
+  { id: 79, name: "Nâziât", arabicName: "النَّازِعَاتِ", ayahCount: 46, revelationType: 'Mekke' },
+  { id: 80, name: "Abese", arabicName: "عَبَسَ", ayahCount: 42, revelationType: 'Mekke' },
+  { id: 81, name: "Tekvîr", arabicName: "التَّكۡوِيرِ", ayahCount: 29, revelationType: 'Mekke' },
+  { id: 82, name: "İnfitâr", arabicName: "الانفِطَارِ", ayahCount: 19, revelationType: 'Mekke' },
+  { id: 83, name: "Mutaffifîn", arabicName: "المُطَفِّفِينَ", ayahCount: 36, revelationType: 'Mekke' },
+  { id: 84, name: "İnşikâk", arabicName: "الانشِقَاقِ", ayahCount: 25, revelationType: 'Mekke' },
+  { id: 85, name: "Bürûc", arabicName: "البُرُوجِ", ayahCount: 22, revelationType: 'Mekke' },
+  { id: 86, name: "Târık", arabicName: "الطَّارِقِ", ayahCount: 17, revelationType: 'Mekke' },
+  { id: 87, name: "A'lâ", arabicName: "الأَعۡلَىٰ", ayahCount: 19, revelationType: 'Mekke' },
+  { id: 88, name: "Ğâşiye", arabicName: "الغَاشِيَةِ", ayahCount: 26, revelationType: 'Mekke' },
+  { id: 89, name: "Fecr", arabicName: "الفَجۡرِ", ayahCount: 30, revelationType: 'Mekke' },
+  { id: 90, name: "Beled", arabicName: "البَلَدِ", ayahCount: 20, revelationType: 'Mekke' },
+  { id: 91, name: "Şems", arabicName: "الشَّمۡسِ", ayahCount: 15, revelationType: 'Mekke' },
+  { id: 92, name: "Leyl", arabicName: "اللَّيۡلِ", ayahCount: 21, revelationType: 'Mekke' },
+  { id: 93, name: "Duhâ", arabicName: "الضُّحَىٰ", ayahCount: 11, revelationType: 'Mekke' },
+  { id: 94, name: "İnşirâh", arabicName: "الشَّرۡحِ", ayahCount: 8, revelationType: 'Mekke' },
+  { id: 95, name: "Tîn", arabicName: "التِّينِ", ayahCount: 8, revelationType: 'Mekke' },
+  { id: 96, name: "Alak", arabicName: "العَلَقِ", ayahCount: 19, revelationType: 'Mekke' },
+  { id: 97, name: "Kadr", arabicName: "القَدۡرِ", ayahCount: 5, revelationType: 'Mekke' },
+  { id: 98, name: "Beyyine", arabicName: "البَيِّنَةِ", ayahCount: 8, revelationType: 'Medine' },
+  { id: 99, name: "Zilzâl", arabicName: "الزَّلۡزَلَةِ", ayahCount: 8, revelationType: 'Medine' },
+  { id: 100, name: "Âdiyât", arabicName: "العَادِيَاتِ", ayahCount: 11, revelationType: 'Mekke' },
+  { id: 101, name: "Kâria", arabicName: "القَارِعَةِ", ayahCount: 11, revelationType: 'Mekke' },
+  { id: 102, name: "Tekâsür", arabicName: "التَّكَاثُرِ", ayahCount: 8, revelationType: 'Mekke' },
+  { id: 103, name: "Asr", arabicName: "العَصۡرِ", ayahCount: 3, revelationType: 'Mekke' },
+  { id: 104, name: "Hümeze", arabicName: "الهُمَزَةِ", ayahCount: 9, revelationType: 'Mekke' },
+  { id: 105, name: "Fîl", arabicName: "الفِيلِ", ayahCount: 5, revelationType: 'Mekke' },
+  { id: 106, name: "Kureyş", arabicName: "قُرَيۡشٍ", ayahCount: 4, revelationType: 'Mekke' },
+  { id: 107, name: "Mâûn", arabicName: "المَاعُونِ", ayahCount: 7, revelationType: 'Mekke' },
+  { id: 108, name: "Kevser", arabicName: "الكَوۡثَرِ", ayahCount: 3, revelationType: 'Mekke' },
+  { id: 109, name: "Kâfirûn", arabicName: "الكَافِرُونَ", ayahCount: 6, revelationType: 'Mekke' },
+  { id: 110, name: "Nasr", arabicName: "النَّصۡرِ", ayahCount: 3, revelationType: 'Medine' },
+  { id: 111, name: "Tebbet", arabicName: "المَسَدِ", ayahCount: 5, revelationType: 'Mekke' },
+  { id: 112, name: "İhlâs", arabicName: "الإِخۡلَاصِ", ayahCount: 4, revelationType: 'Mekke' },
+  { id: 113, name: "Felak", arabicName: "الفَلَقِ", ayahCount: 5, revelationType: 'Mekke' },
+  { id: 114, name: "Nâs", arabicName: "النَّاسِ", ayahCount: 6, revelationType: 'Mekke' },
 ];
-
-export interface SurahDetailContent {
-  surahId: number;
-  verses: {
-    number: number;
-    arabic: string;
-    transcription: string;
-    translation: string;
-  }[];
-}
-
-export const POPULAR_SURAH_CONTENTS: Record<number, SurahDetailContent> = {
-  1: {
-    surahId: 1,
-    verses: [
-      {
-        number: 1,
-        arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-        transcription: 'Bismillâhir-rahmânir-rahîm.',
-        translation: 'Rahmân ve Rahîm olan Allah’ın adıyla.'
-      },
-      {
-        number: 2,
-        arabic: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
-        transcription: 'El-hamdü lillâhi rabbil-âlemîn.',
-        translation: 'Hamd, âlemlerin Rabbi olan Allah’a mahsustur.'
-      },
-      {
-        number: 3,
-        arabic: 'الرَّحْمَٰنِ الرَّحِيمِ',
-        transcription: 'Er-rahmânir-rahîm.',
-        translation: 'O, Rahmândır, Rahîmdir.'
-      },
-      {
-        number: 4,
-        arabic: 'مَالِكِ يَوْمِ الدِّينِ',
-        transcription: 'Mâliki yevmid-dîn.',
-        translation: 'Ceza ve mükâfat gününün (ahiretin) yegâne sahibidir.'
-      },
-      {
-        number: 5,
-        arabic: 'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',
-        transcription: 'İyyâke na’büdü ve iyyâke neste’în.',
-        translation: '(Rabbimiz!) Yalnız sana kulluk eder ve yalnız senden yardım dileriz.'
-      },
-      {
-        number: 6,
-        arabic: 'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
-        transcription: 'İhdinas-sırâtal-müstekîm.',
-        translation: 'Bizi doğru yola ilet;'
-      },
-      {
-        number: 7,
-        arabic: 'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
-        transcription: 'Sırâtallezîne en’amte aleyhim, gayril-mağdûbi aleyhim veled-dâllîn.',
-        translation: 'Kendilerine lütuf ve ihsanda bulunduğun kimselerin yoluna; gazaba uğramışların ve sapmışların yoluna değil! (Âmin)'
-      }
-    ]
-  },
-  94: {
-    surahId: 94,
-    verses: [
-      {
-        number: 1,
-        arabic: 'أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ',
-        transcription: 'Elem neşrah leke sadrak.',
-        translation: 'Biz senin göğsünü (kalbini genişletip ferahlatmadık) açmadık mı?'
-      },
-      {
-        number: 2,
-        arabic: 'وَوَضَعْنَا عَنكَ وِزْرَكَ',
-        transcription: 'Ve veda’nâ anke vizrak.',
-        translation: 'Ve belini büken ağır yükünü üzerinden indirmedik mi?'
-      },
-      {
-        number: 3,
-        arabic: 'الَّذِي أَنقَضَ ظَهْرَكَ',
-        transcription: 'Ellezî enkada zahrak.',
-        translation: 'O yük ki senin belini bükmüştü.'
-      },
-      {
-        number: 4,
-        arabic: 'وَرَفَعْنَا لَكَ ذِكْرَكَ',
-        transcription: 'Ve refa’nâ leke zikrak.',
-        translation: 'Senin şanını ve namını yüceltmedik mi?'
-      },
-      {
-        number: 5,
-        arabic: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',
-        transcription: 'Fe-inne meal-usri yusrâ.',
-        translation: 'Şüphesiz her zorlukla beraber bir kolaylık vardır.'
-      },
-      {
-        number: 6,
-        arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
-        transcription: 'İnne meal-usri yusrâ.',
-        translation: 'Evet, elbette zorlukla beraber bir kolaylık vardır.'
-      },
-      {
-        number: 7,
-        arabic: 'فَإِذَا فَرَغْتَ فَانصَبْ',
-        transcription: 'Fe-izâ ferağte fensab.',
-        translation: 'O halde bir işi bitirince hemen diğerine koyul ve yorul.'
-      },
-      {
-        number: 8,
-        arabic: 'وَإِلَىٰ رَبِّكَ فَارْغَب',
-        transcription: 'Ve ilâ rabbike ferğab.',
-        translation: 'Ve ancak Rabbine yönel, O’na rağbet et.'
-      }
-    ]
-  },
-  112: {
-    surahId: 112,
-    verses: [
-      {
-        number: 1,
-        arabic: 'قُلْ هُوَ اللَّهُ أَحَدٌ',
-        transcription: 'Kul hüvallâhu ehad.',
-        translation: 'De ki: O Allah tektir.'
-      },
-      {
-        number: 2,
-        arabic: 'اللَّهُ الصَّمَدُ',
-        transcription: 'Allâhüs-samed.',
-        translation: 'Allah Samed’dir (Her şey O’na muhtaç, O hiçbir şeye muhtaç değildir).'
-      },
-      {
-        number: 3,
-        arabic: 'لَمْ يَلِدْ وَلَمْ يُولَدْ',
-        transcription: 'Lem yelid ve lem yûled.',
-        translation: 'O, doğurmamış ve doğmamıştır.'
-      },
-      {
-        number: 4,
-        arabic: 'وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ',
-        transcription: 'Ve lem yekün lehû küfüven ehad.',
-        translation: 'Hiçbir şey O’na denk ve benzer değildir.'
-      }
-    ]
-  },
-  113: {
-    surahId: 113,
-    verses: [
-      {
-        number: 1,
-        arabic: 'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ',
-        transcription: 'Kul e’ûzü bi-rabbil-felak.',
-        translation: 'De ki: Sabahın Rabbine sığınırım;'
-      },
-      {
-        number: 2,
-        arabic: 'مِن شَرِّ مَا خَلَقَ',
-        transcription: 'Min şerri mâ halak.',
-        translation: 'Yarattığı şeylerin şerrinden,'
-      },
-      {
-        number: 3,
-        arabic: 'وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ',
-        transcription: 'Ve min şerri gâsikın izâ vekab.',
-        translation: 'Karanlığı çöktüğü zaman gecenin şerrinden,'
-      },
-      {
-        number: 4,
-        arabic: 'وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ',
-        transcription: 'Ve min şerrin-neffâsâti fil-ukad.',
-        translation: 'Düğümlere üfleyen büyücülerin şerrinden,'
-      },
-      {
-        number: 5,
-        arabic: 'وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ',
-        transcription: 'Ve min şerri hâsidin izâ hased.',
-        translation: 'Ve haset ettiği vakit kıskanç kişinin şerrinden!'
-      }
-    ]
-  },
-  114: {
-    surahId: 114,
-    verses: [
-      {
-        number: 1,
-        arabic: 'قُلْ أَعُوذُ بِرَبِّ النَّاسِ',
-        transcription: 'Kul e’ûzü bi-rabbin-nâs.',
-        translation: 'De ki: İnsanların Rabbine sığınırım,'
-      },
-      {
-        number: 2,
-        arabic: 'مَلِكِ النَّاسِ',
-        transcription: 'Melikin-nâs.',
-        translation: 'İnsanların mutlak Melik’ine (hükümdarına),'
-      },
-      {
-        number: 3,
-        arabic: 'إِلَٰهِ النَّاسِ',
-        transcription: 'İlâhin-nâs.',
-        translation: 'İnsanların yegâne İlahı olan Allah’a;'
-      },
-      {
-        number: 4,
-        arabic: 'مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ',
-        transcription: 'Min şerril-vesvâsil-hannâs.',
-        translation: 'O sinsi vesvesecinin (şeytanın) şerrinden,'
-      },
-      {
-        number: 5,
-        arabic: 'الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ',
-        transcription: 'Ellezî yüvesvisü fî sudûrin-nâs.',
-        translation: 'Ki o, insanların kalplerine sürekli vesvese fısıldar;'
-      },
-      {
-        number: 6,
-        arabic: 'مِنَ الْجِنَّةِ وَالنَّاسِ',
-        transcription: 'Minel-cinneti ven-nâs.',
-        translation: 'Gerek cinlerden gerekse insanlardan olan vesvesecilerin şerrinden!'
-      }
-    ]
-  }
-};
-
-// Initial state for 30 Juz
-export function getInitialHatimProgress(): JuzProgress[] {
-  return Array.from({ length: 30 }, (_, i) => ({
-    juzNumber: i + 1,
-    isCompleted: false,
-    readPages: 0,
-    readerName: ''
-  }));
-}
-
-export const HATIM_DUASI = {
-  title: 'Kur’an-ı Kerim Hatim Duası',
-  arabic: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ. اللَّهُمَّ رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ...',
-  turkish: `Elhamdülillâhi Rabbi'l-âlemîn. Ve's-salâtü ve's-selâmü alâ Rasûlinâ Muhammedin ve alâ âlihî ve sahbihî ecmaîn.
-  
-Ey âlemleri yoktan var eden, kalpleri Kur'an nuruyla aydınlatan Yüce Rabbimiz!
-Okumuş olduğumuz hatm-i şerifi dergâh-ı izzetinde en güzel şekilde kabul eyle.
-Hâsıl olan sevabı evvelâ bizzat sevgilin, habibin Hz. Muhammed Mustafa (s.a.v.) Efendimiz'in pak ruh-ı şeriflerine hediye eyledik, vasıl eyle.
-Bütün peygamberlerin, ashab-ı kiramın, din büyüklerimizin ve geçmişlerimizin ruhlarına bağışladık, haberdar eyle.
-Hatim halkamıza katılan, okuyan ve dinleyen kardeşlerimizin günahlarını af, ibadetlerini makbul, yuvalarını huzurlu ve bereketli eyle.
-Bizi Kur'an ahlakıyla ahlaklandır, son nefesimizde Kur'an ve iman ile çene kapamayı nasip eyle.
-Âmin, bi-hürmeti seyyidi'l-mürselîn, ve'l-hamdü lillâhi Rabbi'l-âlemîn.`
-};

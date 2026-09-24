@@ -37,7 +37,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       id: 'quran' as ActiveTab,
       label: 'Kur’an',
       icon: BookOpen,
-      description: 'Kur’an & Hatim Takibi'
+      description: 'Kur’an-ı Kerîm: Arapça, Meal & Dinle'
     },
     {
       id: 'more' as ActiveTab,

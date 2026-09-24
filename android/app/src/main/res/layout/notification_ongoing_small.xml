@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Collapsed ongoing notification: city + live countdown, then today's times. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/notif_city"
+            style="@style/NotifCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Namaz Vakti" />
+
+        <TextView
+            android:id="@+id/notif_next_label"
+            style="@style/NotifNextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="6dp" />
+
+        <Chronometer
+            android:id="@+id/notif_countdown"
+            style="@style/NotifCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+        <TextView android:id="@+id/notif_small_time_0" style="@style/NotifTimeCompact" />
+        <TextView android:id="@+id/notif_small_time_1" style="@style/NotifTimeCompact" />
+        <TextView android:id="@+id/notif_small_time_2" style="@style/NotifTimeCompact" />
+        <TextView android:id="@+id/notif_small_time_3" style="@style/NotifTimeCompact" />
+        <TextView android:id="@+id/notif_small_time_4" style="@style/NotifTimeCompact" />
+        <TextView android:id="@+id/notif_small_time_5" style="@style/NotifTimeCompact" />
+    </LinearLayout>
+</LinearLayout>

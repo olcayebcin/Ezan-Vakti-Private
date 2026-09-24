@@ -30,15 +30,15 @@ export const ShareCardModal: React.FC<ShareCardModalProps> = ({
 
   const getShareText = () => {
     if (contentType === 'verse') {
-      return `📖 GÜNÜN ÂYETİ-İ KERİMESİ\n\n"${verse.translation}"\n\n(${verse.surahName}, ${verse.ayahNumber}. Âyet)\n\nNamaz Vakti & Ezan Pro uygulamasından paylaşıldı.`;
+      return `📖 GÜNÜN ÂYETİ-İ KERİMESİ\n\n"${verse.translation}"\n\n(${verse.surahName}, ${verse.ayahNumber}. Âyet)\n\nNamaz Vakti uygulamasından paylaşıldı.`;
     }
     if (contentType === 'hadith') {
-      return `🌙 GÜNÜN HADİS-İ ŞERİFİ\n\n"${hadith.text}"\n\n— Hz. Muhammed (s.a.v.)\nKaynak: ${hadith.source}\n\nNamaz Vakti & Ezan Pro uygulamasından paylaşıldı.`;
+      return `🌙 GÜNÜN HADİS-İ ŞERİFİ\n\n"${hadith.text}"\n\n— Hz. Muhammed (s.a.v.)\nKaynak: ${hadith.source}\n\nNamaz Vakti uygulamasından paylaşıldı.`;
     }
     if (contentType === 'quote') {
-      return `✨ HİKMETLİ SÖZ\n\n"${quote.quote}"\n\n— ${quote.author} (${quote.era})\n\nNamaz Vakti & Ezan Pro uygulamasından paylaşıldı.`;
+      return `✨ HİKMETLİ SÖZ\n\n"${quote.quote}"\n\n— ${quote.author} (${quote.era})\n\nNamaz Vakti uygulamasından paylaşıldı.`;
     }
-    return `🤲 GÜNÜN DUASI\n\n${dua.title}\n"${dua.meaning}"\n\nNamaz Vakti & Ezan Pro uygulamasından paylaşıldı.`;
+    return `🤲 GÜNÜN DUASI\n\n${dua.title}\n"${dua.meaning}"\n\nNamaz Vakti uygulamasından paylaşıldı.`;
   };
 
   const handleCopy = () => {
@@ -227,7 +227,7 @@ export const ShareCardModal: React.FC<ShareCardModalProps> = ({
             {/* App watermark footer */}
             <div className="mt-6 pt-3 border-t border-neutral-800/80 flex items-center justify-center gap-1.5 text-[10px] text-neutral-400">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
-              <span>Namaz Vakti & Ezan Pro</span>
+              <span>Namaz Vakti</span>
             </div>
           </div>
         </div>

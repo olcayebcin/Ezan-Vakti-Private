@@ -1,6 +1,6 @@
 {
-  "name": "Namaz Vakti & Ezan Pro",
-  "description": "Diyanet takvimli namaz vakitleri, ezan makamları, kıble pusulası, cami bulucu, Kuran-ı Kerim ve hatim takibi.",
+  "name": "Namaz Vakti",
+  "description": "Diyanet takvimli namaz vakitleri, ezan makamları, kıble pusulası, cami bulucu, sesli Kur'an-ı Kerim ve Türkçe meal.",
   "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
