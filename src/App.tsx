@@ -5,7 +5,7 @@ import { DAILY_VERSES, DAILY_HADITHS, WISDOM_QUOTES, DAILY_DUAS } from './data/i
 import { Header } from './components/Header';
 import { MainClock } from './components/MainClock';
 import { PrayerTimeline } from './components/PrayerTimeline';
-import { QuickActionBadges } from './components/QuickActionBadges';
+import { QuickActionBadges, QuickActionBadge, DailyBadgeIcon, ArabicNameIcon } from './components/QuickActionBadges';
 import { BottomNav, ActiveTab } from './components/BottomNav';
 import { CityPickerModal } from './components/CityPickerModal';
 import { CompassModal } from './components/CompassModal';
@@ -15,7 +15,9 @@ import { QuranModal } from './components/QuranModal';
 import { EzanSettingsModal } from './components/EzanSettingsModal';
 import { WidgetModal } from './components/WidgetModal';
 import { DiniBilgilerModal } from './components/DiniBilgilerModal';
-import { ShareCardModal } from './components/ShareCardModal';
+import { DailyModal } from './components/DailyModal';
+import { TopicModal } from './components/TopicModal';
+import { TOPICS } from './data/topics';
 import { ApkInstallModal } from './components/ApkInstallModal';
 import { updateOngoingNotification, clearOngoingNotification } from './utils/ongoingNotification';
 import { updatePrayerWidget } from './utils/prayerWidget';
@@ -73,8 +75,8 @@ export default function App() {
   const [showEzanSettings, setShowEzanSettings] = useState(false);
   const [showWidget, setShowWidget] = useState(false);
   const [showDiniBilgiler, setShowDiniBilgiler] = useState(false);
-  const [showShareCard, setShowShareCard] = useState(false);
-  const [shareCardType, setShareCardType] = useState<'verse' | 'hadith' | 'quote' | 'dua'>('verse');
+  const [showDaily, setShowDaily] = useState(false);
+  const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
   const [showApkModal, setShowApkModal] = useState(false);
   // Keep the Quran screen open across app switches while a recitation is playing.
   const quranAudioActiveRef = useRef(false);
@@ -146,7 +148,8 @@ export default function App() {
         setShowEzanSettings(false);
         setShowWidget(false);
         setShowDiniBilgiler(false);
-        setShowShareCard(false);
+        setShowDaily(false);
+        setActiveTopicId(null);
         setShowApkModal(false);
       }
     };
@@ -270,24 +273,17 @@ export default function App() {
     );
   }, []);
 
-  const handleOpenAyet = () => {
-    setShareCardType('verse');
-    setShowShareCard(true);
-  };
-
-  const handleOpenHadis = () => {
-    setShareCardType('hadith');
-    setShowShareCard(true);
-  };
-
-  const handleOpenOzluSozler = () => {
-    setShowDiniBilgiler(true);
-  };
-
-  const handleOpenDua = () => {
-    setShareCardType('dua');
-    setShowShareCard(true);
-  };
+  // Home shortcuts: today's content on one page, then the curated topic pages.
+  const quickBadges: QuickActionBadge[] = [
+    { id: 'gunun', title: 'Günün', ringColor: '#eab308', icon: <DailyBadgeIcon />, onClick: () => setShowDaily(true) },
+    ...TOPICS.map(t => ({
+      id: t.id,
+      title: t.title,
+      ringColor: t.ringColor,
+      icon: <ArabicNameIcon text={t.arabicTitle} />,
+      onClick: () => setActiveTopicId(t.id),
+    })),
+  ];
 
   const handleSelectPrayerFromTimeline = (prayer: PrayerName) => {
     setSettingsFocusPrayer(prayer);
@@ -345,13 +341,7 @@ export default function App() {
           />
 
           {/* The 4 Circular Action Badges - Ayet, Hadis, Özlü Sözler, Dua */}
-          <QuickActionBadges
-            onOpenAyet={handleOpenAyet}
-            onOpenHadis={handleOpenHadis}
-            onOpenOzluSozler={handleOpenOzluSozler}
-            onOpenDua={handleOpenDua}
-            isDark={isDark}
-          />
+          <QuickActionBadges badges={quickBadges} isDark={isDark} />
 
           {/* Quick Access Floating Action Tiles */}
           <div className="px-4 mb-2">
@@ -489,15 +479,25 @@ export default function App() {
           isDark={isDark}
         />
 
-        <ShareCardModal
-          isOpen={showShareCard}
-          onClose={() => setShowShareCard(false)}
+        <DailyModal
+          isOpen={showDaily}
+          onClose={() => setShowDaily(false)}
           verse={currentVerse}
           hadith={currentHadith}
           quote={currentQuote}
           dua={currentDua}
+          dateLabel={gregorianDateStr}
           isDark={isDark}
-          initialType={shareCardType}
+          onOpenDiniBilgiler={() => {
+            setShowDaily(false);
+            setShowDiniBilgiler(true);
+          }}
+        />
+
+        <TopicModal
+          topic={TOPICS.find(t => t.id === activeTopicId) ?? null}
+          onClose={() => setActiveTopicId(null)}
+          isDark={isDark}
         />
 
         <ApkInstallModal

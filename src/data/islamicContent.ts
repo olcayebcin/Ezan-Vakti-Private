@@ -84,7 +84,7 @@ export const DAILY_HADITHS: DailyHadith[] = [
   {
     id: 'hadith-5',
     arabic: 'الدُّعَاءُ مُخُّ الْعِبَادَةِ',
-    text: 'Dua, ibadetin özüdür ve müminin manevi kalkanıdır.',
+    text: 'Dua, ibadetin özüdür.',
     narrator: 'Enes b. Malik (r.a.)',
     source: 'Tirmizi, Daavat 1',
     topic: 'Dua'
